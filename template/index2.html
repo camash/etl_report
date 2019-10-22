@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ETL Monitor Report by SF</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />    
+    
+    <link href="./css/bootstrap.min.css" rel="stylesheet" />
+    <link href="./css/bootstrap-responsive.min.css" rel="stylesheet" />
+    
+    
+    <link href="./css/font-awesome.css" rel="stylesheet" />
+    
+    <link href="./css/adminia.css" rel="stylesheet" /> 
+    <link href="./css/adminia-responsive.css" rel="stylesheet" /> 
+    
+    <link href="./css/pages/dashboard.css" rel="stylesheet" /> 
+    
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+
+<body>
+	
+<div class="navbar navbar-fixed-top">
+	
+	<div class="navbar-inner">
+		
+		<div class="container">
+			<a class="brand" href="./">ETL监控报告</a>
+		</div> <!-- /container -->
+		
+	</div> <!-- /navbar-inner -->
+	
+</div> <!-- /navbar -->
+
+
+<div id="content">
+	
+	<div class="container">
+		
+		<div class="row">
+			
+			<div class="span3">
+				
+				<hr />
+				
+				<div class="sidebar-extra">
+					<p>说明：以row结尾标题的表格统计的是表在{{etl_date}}分区下的数据行数，以partition结尾标题的表格统计的是表分区总数</p>
+				</div> <!-- .sidebar-extra -->
+				
+				<br />
+		
+			</div> <!-- /span3 -->
+			
+			
+			
+			<div class="span9">
+				
+				<h1 class="page-title">
+					<i class="icon-home"></i>
+					{{etl_date}}
+				</h1>
+				
+				<div class="stat-container">
+										
+					<div class="stat-holder">						
+						<div class="stat">							
+							<span>{{etl_start_time}}</span>							
+							ETL执行开始时间
+						</div> <!-- /stat -->						
+					</div> <!-- /stat-holder -->
+					
+					<div class="stat-holder">						
+						<div class="stat">							
+							<span>{{etl_end_time}}</span>							
+							ETL执行开始时间
+						</div> <!-- /stat -->						
+					</div> <!-- /stat-holder -->
+					
+					<div class="stat-holder">						
+						<div class="stat">							
+							<span>{{hdfs_volume}}</span>							
+							HDFS文件大小
+						</div> <!-- /stat -->						
+					</div> <!-- /stat-holder -->
+					
+					<div class="stat-holder">						
+						<div class="stat">							
+							<span>{{log_folder_volume}}</span>							
+							日志文件夹大小
+						</div> <!-- /stat -->						
+					</div> <!-- /stat-holder -->
+					
+				</div> <!-- /stat-container -->
+				
+				
+                {% for db in databases %}
+                {% set outer_loop = loop %}
+				<div class="widget widget-table">
+										
+					<div class="widget-header">
+						<i class="icon-th-list"></i>
+						<h3>{{ db }}</h3>
+					</div> <!-- /widget-header -->
+					
+					<div class="widget-content">
+					
+						<table class="table table-striped table-bordered">
+							<thead>
+								<tr>
+									<th>Table Name</th>
+									<th>Current Count</th>
+                                    {% if db in ['ods_row', 'dw_row'] %}
+									<th>Previous Count</th>
+									<th>Change</th>
+                                    {% endif %}
+								</tr>
+							</thead>
+							
+							<tbody>
+                                    {% for cnt in result[ outer_loop.index0 ] %}
+								        <tr>
+									    <td>{{ cnt.tab }}</td>
+									    <td>{{ cnt.ccnt }}</td>
+                                        {% if db in ['ods_row', 'dw_row'] %}
+									    <td>{{ cnt.pcnt }}</td>
+									    <td>{{ cnt.change }}</td>
+                                        {% endif %}
+								        </tr>
+                                    {% endfor %}
+							</tbody>
+						</table>
+					
+					</div> <!-- /widget-content -->
+					
+				</div> <!-- /widget -->
+	         {% endfor %}
+				
+				
+				</div> <!-- /row -->
+				
+			</div> <!-- /span9 -->
+			
+			
+		</div> <!-- /row -->
+		
+	</div> <!-- /container -->
+	
+</div> <!-- /content -->
+					
+	
+<div id="footer">
+	
+	<div class="container">				
+		<hr />
+		<p>&copy; 2019 SF. <a href="https://www.github.com/camash" target="_blank" title="TalkingData">TalkingData</a></p>
+	</div> <!-- /container -->
+	
+</div> <!-- /footer -->
+
+
+    
+  </body>
+</html>
